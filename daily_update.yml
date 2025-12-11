@@ -3,7 +3,7 @@ name: Daily Malware DB Update
 on:
   schedule:
     # Tatakbo tuwing 12:00 AM UTC araw-araw
-    - cron: '0 */6 * * *'
+    - cron: '0 */1 * * *'
   workflow_dispatch: # Para pwede mong i-run manual kung gusto mo
 
 permissions:
