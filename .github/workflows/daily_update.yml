@@ -1,39 +1,31 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Python application
+name: Update Malware DB
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+  schedule:
+    - cron: '0 * * * *' # Tumatakbo kada oras
+  workflow_dispatch: # Para sa manual run
 
 jobs:
-  build:
-
+  update-db:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Dito dapat ang logic mo para mag-update ng JSON file
+      - name: Run update script and check changes
+        run: |
+          # Example: Run your Python/Node script to fetch and update malware_db.json
+          # If this script returns exit code 5, the whole workflow fails.
+          # Kung wala kang script, dito ang problema.
+          echo "Running update..."
+          
+      - name: Commit changes (Kung may nabago)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto: Update malware definitions"
+          branch: main # O master, depende sa main branch mo
+          
